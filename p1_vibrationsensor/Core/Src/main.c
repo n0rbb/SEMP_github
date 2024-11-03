@@ -32,9 +32,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define threshold_x 17000
-#define threshold_y 17000
-#define threshold_z 17000
+#define threshold_x 10000
+#define threshold_y 10000
+#define threshold_z 20000
 
 /* USER CODE END PD */
 
@@ -44,6 +44,10 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c1;
+
+SPI_HandleTypeDef hspi1;
+
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim10;
@@ -54,6 +58,8 @@ int blueledflag = 0;
 int activoflag = 0;
 int available = 1;
 
+int tim10finished = 0;
+
 enum estados_led{
 	LED_ENCENDIDO,
 	LED_APAGADO,
@@ -61,9 +67,7 @@ enum estados_led{
 
 enum estados_btn{
 	INACTIVO,
-//	AR,
 	ACTIVO,
-//	AR2,
 };
 
 int Trigger_state = 0;
@@ -71,7 +75,7 @@ int Blue_Led_state = 0;
 int Red_Led_state = 0;
 int Green_Led_state = 0;
 int Orange_Led_state = 0;
-
+int16_t xyz[3]; //Array con tres enteros para la lectura del acelerómetro
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,7 +84,29 @@ static void MX_GPIO_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM10_Init(void);
+static void MX_I2C1_Init(void);
+static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
+int absolute(int16_t value){
+	if (value >= 0) return value;
+	else return -value;
+}
+void read_Accel(){
+	tim10finished = 0;
+	BSP_ACCELERO_GetXYZ(xyz);
+
+	if (absolute(xyz[0]) > threshold_x){
+		Green_Led_state = 1;
+	}
+	if (absolute(xyz[1]) > threshold_y){
+			Orange_Led_state = 1;
+	}
+	if (absolute(xyz[2]) > threshold_z){
+			Red_Led_state = 1;
+	}
+
+}
+
 //Funciones de salida de transiciones ledfsm
 static void func_LED_ENCENDIDO (fsm_t* this){
     Blue_Led_state = 1;
@@ -100,20 +126,8 @@ static int blueLED_timer_finished (fsm_t* this) { //Función que pasa el valor d
 
 //Funciones de salida de transiciones btnfsm
 
-
-static void func_ACTIVO (fsm_t* this){
-	activoflag = 1;
-
-	Trigger_state = 0;
-
-	Red_Led_state = 1;
-	Green_Led_state = 1;
-	Orange_Led_state = 1;
-}
-
 static void func_INACTIVO (fsm_t* this){
 	activoflag = 0;
-
 	Trigger_state = 0;
 
 	Red_Led_state = 0;
@@ -122,13 +136,11 @@ static void func_INACTIVO (fsm_t* this){
 
 }
 
-/*static void func_AR2 (fsm_t* this){
-	available = 0;
+static void func_ACTIVO (fsm_t* this){
+	activoflag = 1;
 	Trigger_state = 0;
-	Red_Led_state = 1;
-	Green_Led_state = 0;
-	Orange_Led_state = 0;
-}*/
+}
+
 
 //Funciones de entrada de transiciones btnfsm
 static int read_BTN(fsm_t* this){
@@ -140,6 +152,7 @@ static int read_BTN(fsm_t* this){
 	}
 	else return 0;
 }
+
 
 
 /* USER CODE END PFP */
@@ -155,8 +168,6 @@ static fsm_trans_t ledfsm[] = { //FSM que enciende y apaga el LED.
 
 static fsm_trans_t btnfsm[] = { //FSM que controla el cooldown del pulsador (antirrebote)
 	{INACTIVO, read_BTN, ACTIVO, func_ACTIVO},
-//	{AR, turnon, ACTIVO, func_ACTIVO},
-//	{AR, turnoff, INACTIVO, func_INACTIVO},
 	{ACTIVO, read_BTN, INACTIVO, func_INACTIVO},
 	{-1, NULL, -1, NULL},
 };
@@ -195,12 +206,16 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM3_Init();
   MX_TIM10_Init();
+  MX_I2C1_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim4); //Inicializo el timer 4.
   HAL_TIM_Base_Start_IT(&htim3); //También el 3.
+  HAL_TIM_Base_Start_IT(&htim10);
 
   fsm_t* maquinaLED = fsm_new(ledfsm);
   fsm_t* maquinaBTN = fsm_new(btnfsm);
+  BSP_ACCELERO_Init(); //Inicializo el acelerómetro
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -212,11 +227,19 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if (activoflag && tim10finished){
+		  tim10finished = 0;
+		 // printf("Tim10 va acabar, llegint accelerometre");
+		  read_Accel();
+	  }
+
+
 	  HAL_GPIO_WritePin(BTN_Trigger_GPIO_Port, BTN_Trigger_Pin, Trigger_state);
 	  HAL_GPIO_WritePin(Blue_Led_GPIO_Port, Blue_Led_Pin, Blue_Led_state);
+
 	  HAL_GPIO_WritePin(Red_Led_GPIO_Port, Red_Led_Pin, Red_Led_state);
 	  HAL_GPIO_WritePin(Green_Led_GPIO_Port, Green_Led_Pin, Green_Led_state);
-	  HAL_GPIO_WritePin(Orange_Led_GPIO_Port, Orange_Led_Pin, available);
+	  HAL_GPIO_WritePin(Orange_Led_GPIO_Port, Orange_Led_Pin, Orange_Led_state);
 
   }
   /* USER CODE END 3 */
@@ -265,6 +288,78 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * @brief SPI1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI1_Init(void)
+{
+
+  /* USER CODE BEGIN SPI1_Init 0 */
+
+  /* USER CODE END SPI1_Init 0 */
+
+  /* USER CODE BEGIN SPI1_Init 1 */
+
+  /* USER CODE END SPI1_Init 1 */
+  /* SPI1 parameter configuration*/
+  hspi1.Instance = SPI1;
+  hspi1.Init.Mode = SPI_MODE_MASTER;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.NSS = SPI_NSS_SOFT;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi1.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI1_Init 2 */
+
+  /* USER CODE END SPI1_Init 2 */
+
 }
 
 /**
@@ -413,6 +508,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, Green_Led_Pin|Orange_Led_Pin|Red_Led_Pin|Blue_Led_Pin, GPIO_PIN_RESET);
@@ -435,7 +531,17 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+int _write(int file, char *ptr, int len)
+{
+  (void)file;
+  int DataIdx;
 
+  for (DataIdx = 0; DataIdx < len; DataIdx++)
+  {
+    ITM_SendChar(*ptr++);
+  }
+  return len;
+}
 /* USER CODE END 4 */
 
 /**

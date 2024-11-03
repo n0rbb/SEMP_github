@@ -69,6 +69,10 @@ void Error_Handler(void);
 #define Blue_Led_GPIO_Port GPIOD
 #define BTN_Trigger_Pin GPIO_PIN_2
 #define BTN_Trigger_GPIO_Port GPIOD
+#define ACCEL_SCL_Pin GPIO_PIN_6
+#define ACCEL_SCL_GPIO_Port GPIOB
+#define ACCEL_SDA_Pin GPIO_PIN_9
+#define ACCEL_SDA_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

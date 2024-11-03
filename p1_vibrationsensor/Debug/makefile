@@ -9,9 +9,37 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include STM32F411E-Discovery/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
+-include Components/wm8994/subdir.mk
+-include Components/ts3510/subdir.mk
+-include Components/stmpe811/subdir.mk
+-include Components/stmpe1600/subdir.mk
+-include Components/st7789h2/subdir.mk
+-include Components/st7735/subdir.mk
+-include Components/s5k5cag/subdir.mk
+-include Components/ov5640/subdir.mk
+-include Components/ov2640/subdir.mk
+-include Components/otm8009a/subdir.mk
+-include Components/nt35510/subdir.mk
+-include Components/mfxstm32l152/subdir.mk
+-include Components/lsm303dlhc/subdir.mk
+-include Components/lsm303agr/subdir.mk
+-include Components/ls016b8uy/subdir.mk
+-include Components/lis3dsh/subdir.mk
+-include Components/lis302dl/subdir.mk
+-include Components/lan8742/subdir.mk
+-include Components/l3gd20/subdir.mk
+-include Components/ili9341/subdir.mk
+-include Components/ili9325/subdir.mk
+-include Components/i3g4250d/subdir.mk
+-include Components/ft6x06/subdir.mk
+-include Components/ft3x67/subdir.mk
+-include Components/exc7200/subdir.mk
+-include Components/dp83848/subdir.mk
+-include Components/cs43l22/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
