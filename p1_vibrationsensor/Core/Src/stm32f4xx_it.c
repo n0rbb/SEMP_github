@@ -59,7 +59,7 @@ extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim10;
 /* USER CODE BEGIN EV */
-extern int blueledflag;
+extern int Blue_Led_state;
 extern int available;
 extern int tim10finished;
 /* USER CODE END EV */
@@ -236,7 +236,7 @@ void TIM3_IRQHandler(void)
 void TIM4_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM4_IRQn 0 */
-  blueledflag = 1;
+  Blue_Led_state = !Blue_Led_state;
   /* USER CODE END TIM4_IRQn 0 */
   HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM4_IRQn 1 */

@@ -34,7 +34,7 @@
 /* USER CODE BEGIN PD */
 #define threshold_x 10000
 #define threshold_y 10000
-#define threshold_z 20000
+#define threshold_z 25000
 
 /* USER CODE END PD */
 
@@ -107,23 +107,6 @@ void read_Accel(){
 
 }
 
-//Funciones de salida de transiciones ledfsm
-static void func_LED_ENCENDIDO (fsm_t* this){
-    Blue_Led_state = 1;
-    blueledflag = 0;
-}
-
-static void func_LED_APAGADO (fsm_t* this){
-    Blue_Led_state = 0;
-    blueledflag = 0;
-
-}
-
-//Funciones de entrada de transiciones ledfsm
-static int blueLED_timer_finished (fsm_t* this) { //Función que pasa el valor de timer para el estado de una fsm
-    return blueledflag;
-}
-
 //Funciones de salida de transiciones btnfsm
 
 static void func_INACTIVO (fsm_t* this){
@@ -159,13 +142,6 @@ static int read_BTN(fsm_t* this){
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-static fsm_trans_t ledfsm[] = { //FSM que enciende y apaga el LED.
-    {LED_ENCENDIDO, blueLED_timer_finished, LED_APAGADO, func_LED_APAGADO},
-    {LED_APAGADO, blueLED_timer_finished, LED_ENCENDIDO, func_LED_ENCENDIDO},
-    {-1, NULL, -1, NULL}, //Valor centinela para la FSM
-
-};
-
 static fsm_trans_t btnfsm[] = { //FSM que controla el cooldown del pulsador (antirrebote)
 	{INACTIVO, read_BTN, ACTIVO, func_ACTIVO},
 	{ACTIVO, read_BTN, INACTIVO, func_INACTIVO},
@@ -213,7 +189,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim3); //También el 3.
   HAL_TIM_Base_Start_IT(&htim10);
 
-  fsm_t* maquinaLED = fsm_new(ledfsm);
+ // fsm_t* maquinaLED = fsm_new(ledfsm);
   fsm_t* maquinaBTN = fsm_new(btnfsm);
   BSP_ACCELERO_Init(); //Inicializo el acelerómetro
   /* USER CODE END 2 */
@@ -223,7 +199,7 @@ int main(void)
   while (1)
   {
 	  fsm_fire(maquinaBTN);
-	  fsm_fire(maquinaLED);
+	//  fsm_fire(maquinaLED);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
