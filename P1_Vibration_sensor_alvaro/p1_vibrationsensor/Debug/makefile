@@ -88,8 +88,8 @@ all: main-build
 main-build: p1_vibrationsensor.elf secondary-outputs
 
 # Tool invocations
-p1_vibrationsensor.elf p1_vibrationsensor.map: $(OBJS) $(USER_OBJS) C:\Users\hontana_97\Downloads\SEMP_github-main\ (3)\SEMP_github-main\p1_vibrationsensor\STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "p1_vibrationsensor.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\hontana_97\Downloads\SEMP_github-main (3)\SEMP_github-main\p1_vibrationsensor\STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="p1_vibrationsensor.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+p1_vibrationsensor.elf p1_vibrationsensor.map: $(OBJS) $(USER_OBJS) C:\Users\worbb\Desktop\Electronics\SEMP\SEMP_github\P1_Vibration_sensor_alvaro\p1_vibrationsensor\STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "p1_vibrationsensor.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\worbb\Desktop\Electronics\SEMP\SEMP_github\P1_Vibration_sensor_alvaro\p1_vibrationsensor\STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="p1_vibrationsensor.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -113,7 +113,7 @@ static void func_INACTIVO (fsm_t* this){
 	activoflag = 0;
 	Trigger_state = 0;
 
-	Red_Led_state = 0;
+	Red_Led_state = 0; //Aquí me interesa resetear los valores a 0.
 	Green_Led_state = 0;
 	Orange_Led_state = 0;
 
