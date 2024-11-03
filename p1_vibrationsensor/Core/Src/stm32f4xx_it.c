@@ -59,9 +59,10 @@ extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim10;
 /* USER CODE BEGIN EV */
-extern int Blue_Led_state;
-extern int available;
-extern int tim10finished;
+extern int Blue_Led_state; //Estado del LED azul
+extern int available; //Flag que indica si han pasado 500ms desde la última pulsación
+extern int readbtn; //Flag que indica si se ha pulsado el botón
+extern int tim10finished; //Flag que dispara la lectura del acelerómetro en modo activo
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -201,6 +202,21 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles EXTI line0 interrupt.
+  */
+void EXTI0_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI0_IRQn 0 */
+  if (available) readbtn = 1;
+  else readbtn = 0;
+  /* USER CODE END EXTI0_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(User_BTN_Pin);
+  /* USER CODE BEGIN EXTI0_IRQn 1 */
+
+  /* USER CODE END EXTI0_IRQn 1 */
+}
 
 /**
   * @brief This function handles TIM1 update interrupt and TIM10 global interrupt.

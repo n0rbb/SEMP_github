@@ -34,7 +34,7 @@
 /* USER CODE BEGIN PD */
 #define threshold_x 10000
 #define threshold_y 10000
-#define threshold_z 25000
+#define threshold_z 20000
 
 /* USER CODE END PD */
 
@@ -60,22 +60,20 @@ int available = 1;
 
 int tim10finished = 0;
 
-enum estados_led{
-	LED_ENCENDIDO,
-	LED_APAGADO,
-};
-
 enum estados_btn{
 	INACTIVO,
 	ACTIVO,
 };
 
-int Trigger_state = 0;
+
 int Blue_Led_state = 0;
 int Red_Led_state = 0;
 int Green_Led_state = 0;
 int Orange_Led_state = 0;
-int16_t xyz[3]; //Array con tres enteros para la lectura del acelerómetro
+
+int Trigger_state = 0;
+int readbtn = 0; //Solo pondré aquí un 1 con la interrupción externa
+int16_t xyz[3]; //Array con tres enteros para la lectura de los ejes del acelerómetro
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -113,6 +111,7 @@ static void func_INACTIVO (fsm_t* this){
 	activoflag = 0;
 	Trigger_state = 0;
 
+
 	Red_Led_state = 0;
 	Green_Led_state = 0;
 	Orange_Led_state = 0;
@@ -122,15 +121,17 @@ static void func_INACTIVO (fsm_t* this){
 static void func_ACTIVO (fsm_t* this){
 	activoflag = 1;
 	Trigger_state = 0;
+
 }
 
 
 //Funciones de entrada de transiciones btnfsm
 static int read_BTN(fsm_t* this){
-	int readbtn = HAL_GPIO_ReadPin(User_BTN_GPIO_Port, User_BTN_Pin);
-	if (available && readbtn){
+	//int readbtn = HAL_GPIO_ReadPin(User_BTN_GPIO_Port, User_BTN_Pin)
+	if (readbtn){
+			readbtn = 0;
 			available = 0;
-			Trigger_state = 1;
+			Trigger_state = 1; //Reseteo el contador para que cuente 500ms
 			return 1;
 	}
 	else return 0;
@@ -454,7 +455,7 @@ static void MX_TIM10_Init(void)
 
   /* USER CODE END TIM10_Init 1 */
   htim10.Instance = TIM10;
-  htim10.Init.Prescaler = 4799;
+  htim10.Init.Prescaler = 9599;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim10.Init.Period = 999;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -491,7 +492,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : User_BTN_Pin */
   GPIO_InitStruct.Pin = User_BTN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(User_BTN_GPIO_Port, &GPIO_InitStruct);
 
@@ -501,6 +502,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
