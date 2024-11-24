@@ -36,11 +36,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define TH_ACC_WARN 18000
-#define TH_ACC_DANGER 23000
+#define TH_ACC_WARN 200
+#define TH_ACC_DANGER 230
 
-#define TH_MAG_WARN 18000
-#define TH_MAG_DANGER 23000
+#define TH_MAG_WARN 110
+#define TH_MAG_DANGER 130
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -74,28 +74,28 @@ osThreadId_t task_ReadAccelHandle;
 const osThreadAttr_t task_ReadAccel_attributes = {
   .name = "task_ReadAccel",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityRealtime,
+  .priority = (osPriority_t) osPriorityRealtime1,
 };
 /* Definitions for task_WriteGreen */
 osThreadId_t task_WriteGreenHandle;
 const osThreadAttr_t task_WriteGreen_attributes = {
   .name = "task_WriteGreen",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityNormal1,
 };
 /* Definitions for task_ReadMagnet */
 osThreadId_t task_ReadMagnetHandle;
 const osThreadAttr_t task_ReadMagnet_attributes = {
   .name = "task_ReadMagnet",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityRealtime,
 };
 /* Definitions for task_WriteRed */
 osThreadId_t task_WriteRedHandle;
 const osThreadAttr_t task_WriteRed_attributes = {
   .name = "task_WriteRed",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for mutexi2c1 */
 osMutexId_t mutexi2c1Handle;
@@ -128,9 +128,9 @@ extern void tk_WriteLED(void *argument);
 extern void tk_ReadMagnet(void *argument);
 
 /* USER CODE BEGIN PFP */
-
-
 fsm_t* LEDazul;
+
+
 
 enum estados_sistema{
 	ACTIVO,
@@ -491,6 +491,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(Blue_LED_GPIO_Port, &GPIO_InitStruct);
 
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
@@ -503,7 +507,6 @@ int __io_putchar(int ch){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	encendido = !encendido;
 	osSemaphoreRelease(exti_semHandle);
 }
 /* USER CODE END 4 */
@@ -521,10 +524,11 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	if(osSemaphoreAcquire(exti_semHandle, osWaitForever) == osOK){ //Antirrebotes del botón
-		printf("%d", encendido);
+	if(osSemaphoreAcquire(exti_semHandle, osWaitForever) == osOK){ //Si lo puede adquirir (se ha pulsado el botón)
+		encendido = !encendido;
+		//printf("%d", encendido);
 		osDelay(500);
-		osSemaphoreAcquire(exti_semHandle, 0);
+		osSemaphoreAcquire(exti_semHandle, 0); //Adquiere el token, no se liberará hasta que se pulse el botón
 	}
 
   }

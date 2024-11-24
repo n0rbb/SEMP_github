@@ -16,11 +16,7 @@ typedef struct {
 	uint32_t channel;
 	uint16_t warning;
 	uint16_t danger;
-	int16_t xyz[3];
 } write_t;
-
-
-
 
 void tk_BlinkBlue(void *argument);
 void tk_ReadAccel(void *argument);
