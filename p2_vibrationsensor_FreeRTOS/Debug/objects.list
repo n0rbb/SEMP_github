@@ -67,3 +67,4 @@
 "./STM32F411E-Discovery/stm32f411e_discovery.o"
 "./STM32F411E-Discovery/stm32f411e_discovery_accelerometer.o"
 "./STM32F411E-Discovery/stm32f411e_discovery_gyroscope.o"
+"./STM32F411E-Discovery/stm32f411e_discovery_magnetometer.o"

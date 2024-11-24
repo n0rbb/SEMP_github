@@ -24,8 +24,9 @@
 /* USER CODE BEGIN Includes */
 #include "fsm.h"
 #include "stm32f411e_discovery_accelerometer.h"
+#include "stm32f411e_discovery_magnetometer.h"
 #include "tasks.h"
-
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -35,7 +36,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define TH_ACC_WARN 18000
+#define TH_ACC_DANGER 23000
 
+#define TH_MAG_WARN 18000
+#define TH_MAG_DANGER 23000
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -78,13 +83,36 @@ const osThreadAttr_t task_WriteGreen_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for task_ReadMagnet */
+osThreadId_t task_ReadMagnetHandle;
+const osThreadAttr_t task_ReadMagnet_attributes = {
+  .name = "task_ReadMagnet",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for task_WriteRed */
+osThreadId_t task_WriteRedHandle;
+const osThreadAttr_t task_WriteRed_attributes = {
+  .name = "task_WriteRed",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for mutexi2c1 */
+osMutexId_t mutexi2c1Handle;
+const osMutexAttr_t mutexi2c1_attributes = {
+  .name = "mutexi2c1"
+};
 /* Definitions for exti_sem */
 osSemaphoreId_t exti_semHandle;
 const osSemaphoreAttr_t exti_sem_attributes = {
   .name = "exti_sem"
 };
 /* USER CODE BEGIN PV */
-write_t data_green = {1000, &htim4, TIM_CHANNEL_1};
+int encendido = 0;
+
+
+write_t data_green = {1000, &htim4, TIM_CHANNEL_1, TH_ACC_WARN, TH_ACC_DANGER};
+write_t data_red = {2000, &htim4, TIM_CHANNEL_3, TH_MAG_WARN, TH_MAG_DANGER};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -97,9 +125,13 @@ void StartDefaultTask(void *argument);
 extern void tk_BlinkBlue(void *argument);
 extern void tk_ReadAccel(void *argument);
 extern void tk_WriteLED(void *argument);
+extern void tk_ReadMagnet(void *argument);
 
 /* USER CODE BEGIN PFP */
-int encendido = 0;
+
+
+fsm_t* LEDazul;
+
 enum estados_sistema{
 	ACTIVO,
 	INACTIVO,
@@ -107,7 +139,7 @@ enum estados_sistema{
 
 
 static int encender(fsm_t* this){
-	return encendido; //btnstate;
+	return encendido;
 }
 
 static int apagar(fsm_t* this){
@@ -167,14 +199,20 @@ int main(void)
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   BSP_ACCELERO_Init();
-  TIM4 -> CCR1 = 0;
+  LSM303AGR_MagInit();
+  TIM4 -> CCR1 = 0; //Registro CCR para el canal 1: led verde
+  TIM4 -> CCR3 = 0; //Registro CCR para el canal 3: led rojo
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
 
-  fsm_t* LEDazul = fsm_new(ledfsm);
+  LEDazul = fsm_new(ledfsm);
   /* USER CODE END 2 */
 
   /* Init scheduler */
   osKernelInitialize();
+  /* Create the mutex(es) */
+  /* creation of mutexi2c1 */
+  mutexi2c1Handle = osMutexNew(&mutexi2c1_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -208,6 +246,12 @@ int main(void)
 
   /* creation of task_WriteGreen */
   task_WriteGreenHandle = osThreadNew(tk_WriteLED, (void*) &data_green, &task_WriteGreen_attributes);
+
+  /* creation of task_ReadMagnet */
+  task_ReadMagnetHandle = osThreadNew(tk_ReadMagnet, NULL, &task_ReadMagnet_attributes);
+
+  /* creation of task_WriteRed */
+  task_WriteRedHandle = osThreadNew(tk_WriteLED, (void*) &data_red, &task_WriteRed_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -478,6 +522,7 @@ void StartDefaultTask(void *argument)
   for(;;)
   {
 	if(osSemaphoreAcquire(exti_semHandle, osWaitForever) == osOK){ //Antirrebotes del botón
+		printf("%d", encendido);
 		osDelay(500);
 		osSemaphoreAcquire(exti_semHandle, 0);
 	}

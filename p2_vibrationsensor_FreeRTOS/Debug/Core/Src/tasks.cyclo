@@ -1,3 +1,5 @@
-../Core/Src/tasks.c:29:6:tk_BlinkBlue	1
-../Core/Src/tasks.c:37:6:tk_ReadAccel	2
-../Core/Src/tasks.c:50:6:tk_WriteLED	10
+../Core/Src/tasks.c:24:5:absolute	2
+../Core/Src/tasks.c:32:6:tk_BlinkBlue	1
+../Core/Src/tasks.c:40:6:tk_ReadAccel	1
+../Core/Src/tasks.c:56:6:tk_ReadMagnet	1
+../Core/Src/tasks.c:72:6:tk_WriteLED	14

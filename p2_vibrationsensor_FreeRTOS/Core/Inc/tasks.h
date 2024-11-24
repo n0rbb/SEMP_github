@@ -14,12 +14,18 @@ typedef struct {
 	uint32_t timeout;
 	TIM_HandleTypeDef* htim;
 	uint32_t channel;
+	uint16_t warning;
+	uint16_t danger;
+	int16_t xyz[3];
 } write_t;
+
 
 
 
 void tk_BlinkBlue(void *argument);
 void tk_ReadAccel(void *argument);
+void tk_ReadMagnet(void *argument);
 void tk_WriteLED(void *argument);
+
 
 #endif /* INC_TASKS_H_ */
