@@ -1,0 +1,3 @@
+../Core/Src/tasks.c:29:6:tk_BlinkBlue	16	static
+../Core/Src/tasks.c:37:6:tk_ReadAccel	24	static
+../Core/Src/tasks.c:50:6:tk_WriteLED	24	static

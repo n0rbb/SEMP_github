@@ -1,0 +1,3 @@
+../Core/Src/tasks.c:29:6:tk_BlinkBlue	1
+../Core/Src/tasks.c:37:6:tk_ReadAccel	2
+../Core/Src/tasks.c:50:6:tk_WriteLED	10
