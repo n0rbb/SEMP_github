@@ -72,6 +72,36 @@ return DWT -> CYCCNT;
 }
 /* USER CODE END 1 */
 
+/* USER CODE BEGIN PREPOSTSLEEP */
+extern void xPortSysTickHandler (void);
+
+/*
+  SysTick handler implementation that also clears overflow flag.
+*/
+#if (USE_CUSTOM_SYSTICK_HANDLER_IMPLEMENTATION != 0)
+void SysTick_Handler (void) {
+  /* Clear overflow flag */
+ // SysTick->CTRL;
+
+  if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED) {
+    /* Call tick handler */
+    xPortSysTickHandler();
+  }
+}
+#endif
+
+__weak void PreSleepProcessing(uint32_t ulExpectedIdleTime)
+{
+	HAL_SuspendTick();
+	HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+}
+
+__weak void PostSleepProcessing(uint32_t ulExpectedIdleTime)
+{
+	HAL_ResumeTick();
+}
+/* USER CODE END PREPOSTSLEEP */
+
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 

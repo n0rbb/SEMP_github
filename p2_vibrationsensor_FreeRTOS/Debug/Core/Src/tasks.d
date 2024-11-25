@@ -42,13 +42,13 @@ Core/Src/tasks.o: ../Core/Src/tasks.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/Inc/tasks.h \
- C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery_accelerometer.h \
- C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery.h \
- C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303dlhc/lsm303dlhc.h \
- C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303dlhc/../Common/accelero.h \
- C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303agr/lsm303agr.h \
- C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303agr/../Common/accelero.h \
- C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery_magnetometer.h \
+ C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery_accelerometer.h \
+ C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery.h \
+ C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303dlhc/lsm303dlhc.h \
+ C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303dlhc/../Common/accelero.h \
+ C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303agr/lsm303agr.h \
+ C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303agr/../Common/accelero.h \
+ C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery_magnetometer.h \
  ../Middlewares/ST/ARM/DSP/Inc/arm_math.h \
  ../Drivers/CMSIS/Include/cmsis_compiler.h
 ../Core/Inc/main.h:
@@ -95,12 +95,12 @@ Core/Src/tasks.o: ../Core/Src/tasks.c ../Core/Inc/main.h \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/Inc/tasks.h:
-C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery_accelerometer.h:
-C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery.h:
-C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303dlhc/lsm303dlhc.h:
-C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303dlhc/../Common/accelero.h:
-C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303agr/lsm303agr.h:
-C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303agr/../Common/accelero.h:
-C:/Users/worbb/Desktop/Electronics/SEMP/sempspace/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery_magnetometer.h:
+C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery_accelerometer.h:
+C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery.h:
+C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303dlhc/lsm303dlhc.h:
+C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303dlhc/../Common/accelero.h:
+C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303agr/lsm303agr.h:
+C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/../Components/lsm303agr/../Common/accelero.h:
+C:/Users/worbb/Desktop/Electronics/SEMP/SEMP_github/p2_vibrationsensor_FreeRTOS/STM32F411E-Discovery/stm32f411e_discovery_magnetometer.h:
 ../Middlewares/ST/ARM/DSP/Inc/arm_math.h:
 ../Drivers/CMSIS/Include/cmsis_compiler.h:

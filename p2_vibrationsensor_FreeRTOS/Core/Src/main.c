@@ -108,7 +108,7 @@ const osSemaphoreAttr_t exti_sem_attributes = {
   .name = "exti_sem"
 };
 /* USER CODE BEGIN PV */
-int encendido = 0;
+int encendido = 1;
 
 
 write_t data_green = {1000, &htim4, TIM_CHANNEL_1, TH_ACC_WARN, TH_ACC_DANGER};

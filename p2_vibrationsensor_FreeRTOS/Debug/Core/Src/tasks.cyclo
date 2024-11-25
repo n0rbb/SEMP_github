@@ -1,5 +1,5 @@
 ../Core/Src/tasks.c:26:5:absolute	2
 ../Core/Src/tasks.c:34:6:tk_BlinkBlue	2
-../Core/Src/tasks.c:47:6:tk_ReadAccel	2
-../Core/Src/tasks.c:70:6:tk_ReadMagnet	2
-../Core/Src/tasks.c:93:6:tk_WriteLED	18
+../Core/Src/tasks.c:49:6:tk_ReadAccel	2
+../Core/Src/tasks.c:73:6:tk_ReadMagnet	2
+../Core/Src/tasks.c:96:6:tk_WriteLED	18

@@ -92,8 +92,8 @@ all: main-build
 main-build: p2_vibrationsensor_FreeRTOS.elf secondary-outputs
 
 # Tool invocations
-p2_vibrationsensor_FreeRTOS.elf p2_vibrationsensor_FreeRTOS.map: $(OBJS) $(USER_OBJS) C:\Users\worbb\Desktop\Electronics\SEMP\sempspace\p2_vibrationsensor_FreeRTOS\STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "p2_vibrationsensor_FreeRTOS.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\worbb\Desktop\Electronics\SEMP\sempspace\p2_vibrationsensor_FreeRTOS\STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="p2_vibrationsensor_FreeRTOS.map" -Wl,--gc-sections -static -L../Middlewares/ST/ARM/DSP/Lib --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+p2_vibrationsensor_FreeRTOS.elf p2_vibrationsensor_FreeRTOS.map: $(OBJS) $(USER_OBJS) C:\Users\worbb\Desktop\Electronics\SEMP\SEMP_github\p2_vibrationsensor_FreeRTOS\STM32F411VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "p2_vibrationsensor_FreeRTOS.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\worbb\Desktop\Electronics\SEMP\SEMP_github\p2_vibrationsensor_FreeRTOS\STM32F411VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="p2_vibrationsensor_FreeRTOS.map" -Wl,--gc-sections -static -L../Middlewares/ST/ARM/DSP/Lib --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

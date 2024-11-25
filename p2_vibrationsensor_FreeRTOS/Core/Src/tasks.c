@@ -37,10 +37,12 @@ void tk_BlinkBlue(void *argument){
 		//fsm_fire(LEDazul);
 		if (encendido){
 			HAL_GPIO_TogglePin(Blue_LED_GPIO_Port, Blue_LED_Pin);
+			osDelay(1000);
 		}
-		else
+		else{
 			HAL_GPIO_WritePin(Blue_LED_GPIO_Port, Blue_LED_Pin, RESET);
-		osDelay(1000);
+		}
+
 	}
 }
 
@@ -55,6 +57,7 @@ void tk_ReadAccel(void *argument){
 			cumxyz[0] += absolute(accxyz[0]);
 			cumxyz[1] += absolute(accxyz[1]);
 			cumxyz[2] += absolute(accxyz[2]);
+			osDelay(5);
 		}
 		else{
 			cumxyz[0] = 0;
@@ -63,7 +66,7 @@ void tk_ReadAccel(void *argument){
 		}
 	//	printf("Cumacc: %d, %d, %d\n", cumxyz[0], cumxyz[1], cumxyz[2]);
 
-		osDelay(5);
+
 	}
 }
 
@@ -77,7 +80,7 @@ void tk_ReadMagnet(void *argument){
 			magcumxyz[0] += absolute(magxyz[0]);
 			magcumxyz[1] += absolute(magxyz[1]);
 			magcumxyz[2] += absolute(magxyz[2]);
-
+			osDelay(10);
 	//	printf("Cummag: %d, %d, %d\n", magcumxyz[0], magcumxyz[1], magcumxyz[2]);
 		}
 		else{
@@ -86,7 +89,7 @@ void tk_ReadMagnet(void *argument){
 			magcumxyz[2] = 0;
 		}
 
-		osDelay(10);
+
 	}
 }
 
@@ -122,11 +125,10 @@ void tk_WriteLED(void *argument){
 		else if (modulo >= data->danger){
 			__HAL_TIM_SET_COMPARE(data->htim, data->channel, 90);
 		}
+		osDelay(data->timeout);
 	}
 	else{
 		__HAL_TIM_SET_COMPARE(data->htim, data->channel, 0);
 	}
-
-	osDelay(data->timeout);
 	}
 }
