@@ -1,0 +1,4 @@
+../STM32F411E-Discovery/stm32f411e_discovery_magnetometer.c:15:6:LSM303AGR_MagInit	1
+../STM32F411E-Discovery/stm32f411e_discovery_magnetometer.c:26:6:LSM303AGR_MagReadXYZ	1
+../STM32F411E-Discovery/stm32f411e_discovery_magnetometer.c:52:6:LSM303DLHC_MagInit	1
+../STM32F411E-Discovery/stm32f411e_discovery_magnetometer.c:64:6:LSM303DLHC_MagReadXYZ	1
